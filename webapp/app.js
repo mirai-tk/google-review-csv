@@ -38,12 +38,12 @@
   const extractInfo = document.getElementById("extractInfo");
 
   const previewPadHost = document.getElementById("previewPadHost");
-  const previewPadRoot = document.getElementById("previewPadRoot");
+  const previewPadParts = document.getElementById("previewPadParts");
   const previewPadHostVal = document.getElementById("previewPadHostVal");
-  const previewPadRootVal = document.getElementById("previewPadRootVal");
+  const previewPadPartsVal = document.getElementById("previewPadPartsVal");
 
   const LS_PAD_HOST = "googleReviewPreviewPadHost";
-  const LS_PAD_ROOT = "googleReviewPreviewPadRoot";
+  const LS_PAD_PARTS = "googleReviewPreviewPadParts";
 
   const modal = document.getElementById("modal");
   const modalSnippet = document.getElementById("modalSnippet");
@@ -199,34 +199,33 @@
 
   function applyPreviewPadding() {
     const hostPx = Math.max(0, Math.min(48, parseInt(previewPadHost.value, 10) || 0));
-    const rootPx = Math.max(0, Math.min(48, parseInt(previewPadRoot.value, 10) || 0));
+    const partPx = Math.max(0, Math.min(24, parseInt(previewPadParts.value, 10) || 0));
     previewPadHostVal.textContent = String(hostPx);
-    previewPadRootVal.textContent = String(rootPx);
+    previewPadPartsVal.textContent = String(partPx);
     previewHost.style.padding = hostPx + "px";
-    if (previewRoot && previewRoot.style) {
-      previewRoot.style.boxSizing = "border-box";
-      previewRoot.style.padding = rootPx > 0 ? rootPx + "px" : "";
+    if (previewInner) {
+      previewInner.style.setProperty("--preview-part-padding", partPx + "px");
     }
   }
 
   function initPreviewPaddingControls() {
     try {
       const h = localStorage.getItem(LS_PAD_HOST);
-      const r = localStorage.getItem(LS_PAD_ROOT);
+      const p = localStorage.getItem(LS_PAD_PARTS);
       if (h !== null && h !== "") previewPadHost.value = h;
-      if (r !== null && r !== "") previewPadRoot.value = r;
+      if (p !== null && p !== "") previewPadParts.value = p;
     } catch (_) {}
 
     function onChange() {
       applyPreviewPadding();
       try {
         localStorage.setItem(LS_PAD_HOST, previewPadHost.value);
-        localStorage.setItem(LS_PAD_ROOT, previewPadRoot.value);
+        localStorage.setItem(LS_PAD_PARTS, previewPadParts.value);
       } catch (_) {}
     }
 
     previewPadHost.addEventListener("input", onChange);
-    previewPadRoot.addEventListener("input", onChange);
+    previewPadParts.addEventListener("input", onChange);
     applyPreviewPadding();
   }
 

@@ -217,6 +217,13 @@ body {
   color: var(--muted);
 }
 
+.preview-padding-note {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 .preview-host {
   position: relative;
   min-height: 120px;
@@ -236,12 +243,15 @@ body {
 }
 
 .preview-host .preview-inner {
+  --preview-part-padding: 0px;
   font-size: 14px;
   line-height: 1.45;
 }
 
 .preview-host .preview-inner * {
   cursor: pointer;
+  box-sizing: border-box;
+  padding: var(--preview-part-padding, 0px);
 }
 
 .preview-host .preview-inner *:hover {
