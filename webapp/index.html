@@ -35,6 +35,20 @@
       <section class="card card--wide" aria-labelledby="step3">
         <h2 id="step3" class="card__title">3. プレビュー（1件目）— 要素をクリックして列に割り当て</h2>
         <p class="hint">プレビュー内をクリック → モーダルで「列」と「値の取り方」（テキスト / aria-label / 属性名）を選ぶ。ホバーで対象が強調されます。</p>
+        <div class="preview-padding-controls" aria-label="プレビュー枠のパディング">
+          <div class="preview-padding-row">
+            <label class="preview-padding-label" for="previewPadHost">外枠（白い領域）のパディング</label>
+            <input type="range" id="previewPadHost" class="preview-padding-range" min="0" max="48" value="16" step="1">
+            <output id="previewPadHostVal" class="preview-padding-val" for="previewPadHost">16</output>
+            <span class="preview-padding-unit">px</span>
+          </div>
+          <div class="preview-padding-row">
+            <label class="preview-padding-label" for="previewPadRoot">口コミ1件の枠（内側）のパディング</label>
+            <input type="range" id="previewPadRoot" class="preview-padding-range" min="0" max="48" value="8" step="1">
+            <output id="previewPadRootVal" class="preview-padding-val" for="previewPadRoot">8</output>
+            <span class="preview-padding-unit">px</span>
+          </div>
+        </div>
         <div id="previewHost" class="preview-host" data-empty>
           <p class="preview-placeholder">「プレビュー生成」でここに最初の1件が表示されます。</p>
         </div>

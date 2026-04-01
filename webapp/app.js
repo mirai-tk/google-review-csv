@@ -37,6 +37,14 @@
   const includeBom = document.getElementById("includeBom");
   const extractInfo = document.getElementById("extractInfo");
 
+  const previewPadHost = document.getElementById("previewPadHost");
+  const previewPadRoot = document.getElementById("previewPadRoot");
+  const previewPadHostVal = document.getElementById("previewPadHostVal");
+  const previewPadRootVal = document.getElementById("previewPadRootVal");
+
+  const LS_PAD_HOST = "googleReviewPreviewPadHost";
+  const LS_PAD_ROOT = "googleReviewPreviewPadRoot";
+
   const modal = document.getElementById("modal");
   const modalSnippet = document.getElementById("modalSnippet");
   const modalColumn = document.getElementById("modalColumn");
@@ -182,10 +190,44 @@
     inner.addEventListener("click", onPreviewClick);
 
     refreshMappedHighlights();
+    applyPreviewPadding();
     btnDownload.disabled = false;
     extractInfo.textContent =
       "一致件数: " + nodes.length + " 件（CSVは全件に適用されます）";
     renderColumnList();
+  }
+
+  function applyPreviewPadding() {
+    const hostPx = Math.max(0, Math.min(48, parseInt(previewPadHost.value, 10) || 0));
+    const rootPx = Math.max(0, Math.min(48, parseInt(previewPadRoot.value, 10) || 0));
+    previewPadHostVal.textContent = String(hostPx);
+    previewPadRootVal.textContent = String(rootPx);
+    previewHost.style.padding = hostPx + "px";
+    if (previewRoot && previewRoot.style) {
+      previewRoot.style.boxSizing = "border-box";
+      previewRoot.style.padding = rootPx > 0 ? rootPx + "px" : "";
+    }
+  }
+
+  function initPreviewPaddingControls() {
+    try {
+      const h = localStorage.getItem(LS_PAD_HOST);
+      const r = localStorage.getItem(LS_PAD_ROOT);
+      if (h !== null && h !== "") previewPadHost.value = h;
+      if (r !== null && r !== "") previewPadRoot.value = r;
+    } catch (_) {}
+
+    function onChange() {
+      applyPreviewPadding();
+      try {
+        localStorage.setItem(LS_PAD_HOST, previewPadHost.value);
+        localStorage.setItem(LS_PAD_ROOT, previewPadRoot.value);
+      } catch (_) {}
+    }
+
+    previewPadHost.addEventListener("input", onChange);
+    previewPadRoot.addEventListener("input", onChange);
+    applyPreviewPadding();
   }
 
   /** @param {MouseEvent} e */
@@ -472,5 +514,6 @@
     return bom ? "\uFEFF" + body : body;
   }
 
+  initPreviewPaddingControls();
   renderColumnList();
 })();
