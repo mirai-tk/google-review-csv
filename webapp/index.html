@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google口コミHTML → CSV ビルダー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Shippori+Mincho:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <h1 class="hero__title">口コミHTML → CSV</h1>
+      <p class="hero__lead">貼り付けたHTMLから1件分の枠をプレビューし、パーツをクリックして列に割り当てます。セレクターは毎回の調査不要に近づけます。</p>
+    </header>
+
+    <main class="grid">
+      <section class="card" aria-labelledby="step1">
+        <h2 id="step1" class="card__title">1. HTMLを貼り付け</h2>
+        <textarea id="htmlInput" class="textarea" rows="10" placeholder="Googleの口コミページからコピーしたHTMLをここに貼り付け"></textarea>
+      </section>
+
+      <section class="card" aria-labelledby="step2">
+        <h2 id="step2" class="card__title">2. 口コミ1件のコンテナー（親）のセレクター</h2>
+        <p class="hint">例: <code>.bwb7ce</code>（サイトの構造に合わせて変更）</p>
+        <div class="row">
+          <input type="text" id="containerSelector" class="input" value=".bwb7ce" autocomplete="off" spellcheck="false">
+          <button type="button" id="btnPreview" class="btn btn--primary">プレビュー生成</button>
+        </div>
+        <p id="parseError" class="error" hidden></p>
+      </section>
+
+      <section class="card card--wide" aria-labelledby="step3">
+        <h2 id="step3" class="card__title">3. プレビュー（1件目）— 要素をクリックして列に割り当て</h2>
+        <p class="hint">プレビュー内をクリック → モーダルで「列」と「値の取り方」（テキスト / aria-label / 属性名）を選ぶ。ホバーで対象が強調されます。</p>
+        <div id="previewHost" class="preview-host" data-empty>
+          <p class="preview-placeholder">「プレビュー生成」でここに最初の1件が表示されます。</p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="step4">
+        <h2 id="step4" class="card__title">4. 列の並び（ドラッグで並べ替え）</h2>
+        <p class="hint">CSVに出力される列の順番です。<code>No.</code> は行番号で自動付与。</p>
+        <ul id="columnList" class="column-list"></ul>
+        <button type="button" id="btnAddColumn" class="btn btn--ghost">＋ カスタム列を追加</button>
+      </section>
+
+      <section class="card" aria-labelledby="step5">
+        <h2 id="step5" class="card__title">5. CSVを出力</h2>
+        <div class="row row--wrap">
+          <label class="check"><input type="checkbox" id="includeBom" checked> Excel向けにBOM付きUTF-8</label>
+          <button type="button" id="btnDownload" class="btn btn--primary" disabled>CSVをダウンロード</button>
+        </div>
+        <p id="extractInfo" class="muted"></p>
+      </section>
+    </main>
+
+    <footer class="foot muted">
+      ブラウザ内で完結。サーバにHTMLは送りません。
+    </footer>
+  </div>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle" class="modal__title">この要素をどの列に？</h3>
+      <p id="modalSnippet" class="modal__snippet"></p>
+      <div class="field">
+        <span class="label">列</span>
+        <select id="modalColumn" class="select"></select>
+      </div>
+      <div class="field">
+        <span class="label">値の取り方</span>
+        <select id="modalMode" class="select">
+          <option value="text">テキスト（textContent）</option>
+          <option value="aria">属性 aria-label</option>
+          <option value="attr">その他の属性</option>
+        </select>
+      </div>
+      <div class="field" id="attrRow" hidden>
+        <span class="label">属性名</span>
+        <input type="text" id="modalAttrName" class="input" placeholder="例: href, data-value">
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--ghost" data-close>キャンセル</button>
+        <button type="button" id="modalSave" class="btn btn--primary">この列に割り当て</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# Netlify: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # ビルド不要の静的サイト（webapp/index.html がトップ）
+  publish = "webapp"
